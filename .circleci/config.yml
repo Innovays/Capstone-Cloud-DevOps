@@ -446,6 +446,12 @@ jobs:
                 tar -czvf artifact.tar.gz dist
                 mv artifact.tar.gz ~/project/.circleci/ansible/roles/deploy/files/artifact-frontend-${CIRCLE_WORKFLOW_ID:0:7}.tar.gz
                 aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
+        # - run:
+        #     name: Build frontend objects
+        #     command: | #TODO: Tag anpassen
+        #       docker build --tag=$DOCKER_TAG:latest . &&\
+        #       #docker tag my-repo:latest <account-id>.dkr.ecr.<region>.amazonaws.com/my-repo:latest
+        #       #docker push <account-id>.dkr.ecr.<region>.amazonaws.com/my-repo:latest
         - run:
             name: Deploy frontend objects
             command: |
@@ -500,34 +506,34 @@ jobs:
             echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> "backend/.env"
             echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> "backend/.env"
             # cat backend/.env
-      - run:
-          name: build backend dist
-          command: |
-            cd backend
-            npm install
-            npm run build
-      - run:
-          name: build zip file
-          command: |
-            cd ~/project
-            tar -zcvf api.tar.gz backend/
-            mv api.tar.gz ~/project/.circleci/ansible/roles/deploy/files/artifact-backend.tar.gz
-      - run:
-          name: add ansible config
-          command: |
-            # echo "[default]" > ansible.cfg
-            # echo "log_path=~/project/.circleci/ansible/roles/deploy/files/ansible.log" >> ansible.cfg #
+      # - run:
+      #     name: build backend dist
+      #     command: |
+      #       cd backend
+      #       npm install
+      #       npm run build
+      # - run:
+      #     name: build zip file
+      #     command: |
+      #       cd ~/project
+      #       tar -zcvf api.tar.gz backend/
+      #       mv api.tar.gz ~/project/.circleci/ansible/roles/deploy/files/artifact-backend.tar.gz
+      # - run:
+      #     name: add ansible config
+      #     command: |
+      #       # echo "[default]" > ansible.cfg
+      #       # echo "log_path=~/project/.circleci/ansible/roles/deploy/files/ansible.log" >> ansible.cfg #
 
-      - run:
-          name: Deploy backend
-          command: |
-            cd ~/project/.circleci/ansible
-            cat inventory.txt
-            ansible-playbook -i inventory.txt deploy-backend.yml -vvv
-            cat ~/project/.circleci/ansible/roles/deploy/files/ansible.log
-          environment:
-            ANSIBLE_LOG_PATH: ~/project/.circleci/ansible/roles/deploy/files/ansible.log
-            ANSIBLE_DEBUG: "True"
+      # - run:
+      #     name: Deploy backend
+      #     command: |
+      #       cd ~/project/.circleci/ansible
+      #       cat inventory.txt
+      #       ansible-playbook -i inventory.txt deploy-backend.yml -vvv
+      #       cat ~/project/.circleci/ansible/roles/deploy/files/ansible.log
+      #     environment:
+      #       ANSIBLE_LOG_PATH: ~/project/.circleci/ansible/roles/deploy/files/ansible.log
+      #       ANSIBLE_DEBUG: "True"
       - store_artifacts:
           path: ~/project/.circleci/ansible/roles/deploy/files/ansible.log
       # - save_cache:
