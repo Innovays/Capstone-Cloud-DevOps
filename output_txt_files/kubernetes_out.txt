@@ -1,0 +1,13 @@
+NAME                                                READY   STATUS              RESTARTS   AGE
+docker-build-prediction-flask-app-7956dbcc5-zj5hs   0/1     ContainerCreating   0          2s
+Waiting for deployment "docker-build-prediction-flask-app" rollout to finish: 0 of 1 updated replicas are available...
+deployment "docker-build-prediction-flask-app" successfully rolled out
+nohup: ignoring input
+Forwarding from 0.0.0.0:8080 -> 80
+Port: 8080
+Handling connection for 8080
+{
+  "prediction": [
+    20.35373177134412
+  ]
+}
