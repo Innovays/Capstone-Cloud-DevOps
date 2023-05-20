@@ -200,11 +200,11 @@ workflows:
             - build-test
           filters:
             branches:
-              only: [ master ]
+              only: [ main ]
       - setup-infra:
           filters:
             branches:
-              only: [ master ]
+              only: [ main ]
       - setup-cluster:
           requires:
             - setup-infra
