@@ -1,0 +1,18 @@
+- name: "Deploy latest app"
+  hosts: management[0]
+  user: ubuntu
+  gather_facts: false
+  become: yes
+  vars:
+    ENVIRONMENT_NAME: "{{ lookup('env', 'ENVIRONMENT_NAME') }}"
+    CIRCLE_WORKFLOW_ID: "{{ lookup('env', 'CIRCLE_WORKFLOW_ID') }}"
+  tasks:
+    - name: Update the deployment and run the latest Build
+      shell: "./bin/kubectl set image deployments/{{ ENVIRONMENT_NAME }}-deployment {{ ENVIRONMENT_NAME }}-app={{ REPOSITORY_NAME }}/{{ ENVIRONMENT_NAME }}:{{ CIRCLE_WORKFLOW_ID }}"
+      args:
+        chdir: $HOME
+
+    - name: Check if deployment is successful
+      shell: "./bin/kubectl rollout status deployments/{{ ENVIRONMENT_NAME }}-deployment"
+      args:
+        chdir: $HOME
