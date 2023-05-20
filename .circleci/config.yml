@@ -53,9 +53,9 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout
-      - add_ssh_keys:
-          fingerprints:
-            - ${SSH_FINGERPRINT}
+      # - add_ssh_keys:
+      #     fingerprints:
+      #       - ${SSH_FINGERPRINT}
       - run:
           name: Install dependencies
           command: yum install -y tar gzip
