@@ -203,18 +203,18 @@ workflows:
       - docker-upload:
           requires:
             - build-test
-          filters:
-            branches:
-              only: [ main ]
-      - setup-infra:
-          filters:
-            branches:
-              only: [ main ]
-      - setup-cluster:
-          requires:
-            - setup-infra
-            - docker-upload
-      - deploy-app:
-          requires:
-            - setup-cluster
+          # filters:
+          #   branches:
+          #     only: [ main ]
+      # - setup-infra:
+      #     filters:
+      #       branches:
+      #         only: [ main ]
+      # - setup-cluster:
+      #     requires:
+      #       - setup-infra
+      #       - docker-upload
+      # - deploy-app:
+      #     requires:
+      #       - setup-cluster
             
