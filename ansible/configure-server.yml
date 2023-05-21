@@ -1,7 +1,7 @@
 ---
 - name: "Install dependencies"
   hosts: management
-  user: ubuntu
+  user: ec2-user
   gather_facts: false
   become: yes
   pre_tasks:

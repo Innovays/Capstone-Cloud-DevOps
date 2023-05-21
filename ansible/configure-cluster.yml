@@ -1,7 +1,7 @@
 ---
 - name: "Configure the EKS cluster with kubectl"
   hosts: management[0]
-  user: ubuntu
+  user: ec2-user
   gather_facts: false
   become: yes
   vars:
