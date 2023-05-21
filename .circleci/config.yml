@@ -141,6 +141,8 @@ jobs:
                 cd ansible
                 ansible-playbook -i ~/inventory.txt configure-server.yml
               fi
+              # temporary
+              echo "Successfully" >> ~/checkIfDeployed.txt
 
   deploy-app:
     docker:
