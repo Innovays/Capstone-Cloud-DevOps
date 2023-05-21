@@ -37,18 +37,18 @@ jobs:
       - checkout
       - setup_remote_docker:
           version: 19.03.13
-      # - run:
-      #     name: Build Docker Image
-      #     command: |
-      #       docker build --tag=$DOCKER_IMAGE_NAME .
-      #       docker image ls
-      # - run:
-      #     name: Push Docker to Dockerhub
-      #     command: |
-      #       echo "Docker ID and Image: $DOCKER_IMAGE_NAME"
-      #       docker login -u="$DOCKERHUB_USERNAME" -p="$DOCKERHUB_PASSWORD"
-      #       docker tag $DOCKER_IMAGE_NAME $DOCKERHUB_USERNAME/$DOCKER_IMAGE_NAME:$CIRCLE_WORKFLOW_ID
-      #       docker push $DOCKERHUB_USERNAME/$DOCKER_IMAGE_NAME:$CIRCLE_WORKFLOW_ID
+      - run:
+          name: Build Docker Image
+          command: |
+            docker build --tag=$DOCKER_IMAGE_NAME .
+            docker image ls
+      - run:
+          name: Push Docker to Dockerhub
+          command: |
+            echo "Docker ID and Image: $DOCKER_IMAGE_NAME"
+            docker login -u="$DOCKERHUB_USERNAME" -p="$DOCKERHUB_PASSWORD"
+            docker tag $DOCKER_IMAGE_NAME $DOCKERHUB_USERNAME/$DOCKER_IMAGE_NAME:$CIRCLE_WORKFLOW_ID
+            docker push $DOCKERHUB_USERNAME/$DOCKER_IMAGE_NAME:$CIRCLE_WORKFLOW_ID
 
   setup-infra:
     docker:
@@ -58,36 +58,36 @@ jobs:
       - run:
           name: Install dependencies
           command: yum install -y tar gzip
-      # - run:
-      #     name: Ensure EKS network exists
-      #     command: |
-      #       aws cloudformation deploy \
-      #         --template-file cloudformation/network.yml \
-      #         --tags project=${ENVIRONMENT_NAME}-project \
-      #         --stack-name "${ENVIRONMENT_NAME}-eks-network" \
-      #         --region ${AWS_DEFAULT_REGION} \
-      #         --parameter-overrides file://cloudformation/network-parameters.json
-      # - run:
-      #       name: Ensure EKS Cluster exists
-      #       command: |
-      #         aws cloudformation deploy \
-      #           --template-file cloudformation/cluster.yml \
-      #           --tags project=${ENVIRONMENT_NAME}-project \
-      #           --stack-name "${ENVIRONMENT_NAME}-eks-cluster" \
-      #           --region ${AWS_DEFAULT_REGION} \
-      #           --parameter-overrides file://cloudformation/cluster-parameters.json \
-      #           --capabilities CAPABILITY_NAMED_IAM
-      #       no_output_timeout: 15m
-      # - run:
-      #     name: Ensure Nodegroup exists
-      #     command: |
-      #       aws cloudformation deploy \
-      #         --template-file cloudformation/nodegroup.yml \
-      #         --tags project=${ENVIRONMENT_NAME}-project \
-      #         --stack-name "${ENVIRONMENT_NAME}-eks-nodegroup" \
-      #         --region ${AWS_DEFAULT_REGION} \
-      #         --parameter-overrides file://cloudformation/nodegroup-parameters.json \
-      #         --capabilities CAPABILITY_NAMED_IAM 
+      - run:
+          name: Ensure EKS network exists
+          command: |
+            aws cloudformation deploy \
+              --template-file cloudformation/network.yml \
+              --tags project=${ENVIRONMENT_NAME}-project \
+              --stack-name "${ENVIRONMENT_NAME}-eks-network" \
+              --region ${AWS_DEFAULT_REGION} \
+              --parameter-overrides file://cloudformation/network-parameters.json
+      - run:
+            name: Ensure EKS Cluster exists
+            command: |
+              aws cloudformation deploy \
+                --template-file cloudformation/cluster.yml \
+                --tags project=${ENVIRONMENT_NAME}-project \
+                --stack-name "${ENVIRONMENT_NAME}-eks-cluster" \
+                --region ${AWS_DEFAULT_REGION} \
+                --parameter-overrides file://cloudformation/cluster-parameters.json \
+                --capabilities CAPABILITY_NAMED_IAM
+            no_output_timeout: 15m
+      - run:
+          name: Ensure Nodegroup exists
+          command: |
+            aws cloudformation deploy \
+              --template-file cloudformation/nodegroup.yml \
+              --tags project=${ENVIRONMENT_NAME}-project \
+              --stack-name "${ENVIRONMENT_NAME}-eks-nodegroup" \
+              --region ${AWS_DEFAULT_REGION} \
+              --parameter-overrides file://cloudformation/nodegroup-parameters.json \
+              --capabilities CAPABILITY_NAMED_IAM 
       - run:
           name: Ensure management instances exists
           command: |
