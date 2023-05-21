@@ -58,43 +58,43 @@ jobs:
       - run:
           name: Install dependencies
           command: yum install -y tar gzip
-      - run:
-          name: Ensure EKS network exists
-          command: |
-            aws cloudformation deploy \
-              --template-file cloudformation/network.yml \
-              --tags project=${ENVIRONMENT_NAME}-project \
-              --stack-name "${ENVIRONMENT_NAME}-eks-network" \
-              --region ${AWS_DEFAULT_REGION} \
-              --parameter-overrides file://cloudformation/network-parameters.json
-      - run:
-            name: Ensure EKS Cluster exists
-            command: |
-              aws cloudformation deploy \
-                --template-file cloudformation/cluster.yml \
-                --tags project=${ENVIRONMENT_NAME}-project \
-                --stack-name "${ENVIRONMENT_NAME}-eks-cluster" \
-                --region ${AWS_DEFAULT_REGION} \
-                --parameter-overrides file://cloudformation/cluster-parameters.json \
-                --capabilities CAPABILITY_NAMED_IAM
-            no_output_timeout: 15m
-      - run:
-          name: Ensure Nodegroup exists
-          command: |
-            aws cloudformation deploy \
-              --template-file cloudformation/nodegroup.yml \
-              --tags project=${ENVIRONMENT_NAME}-project \
-              --stack-name "${ENVIRONMENT_NAME}-eks-nodegroup" \
-              --region ${AWS_DEFAULT_REGION} \
-              --parameter-overrides file://cloudformation/nodegroup-parameters.json \
-              --capabilities CAPABILITY_NAMED_IAM 
+      # - run:
+      #     name: Ensure EKS network exists
+      #     command: |
+      #       aws cloudformation deploy \
+      #         --template-file cloudformation/network.yml \
+      #         --tags project=${ENVIRONMENT_NAME}-${CIRCLE_WORKFLOW_ID:0:7}-project \
+      #         --stack-name "${ENVIRONMENT_NAME}-${CIRCLE_WORKFLOW_ID:0:7}-eks-network" \
+      #         --region ${AWS_DEFAULT_REGION} \
+      #         --parameter-overrides file://cloudformation/network-parameters.json
+      # - run:
+      #       name: Ensure EKS Cluster exists
+      #       command: |
+      #         aws cloudformation deploy \
+      #           --template-file cloudformation/cluster.yml \
+      #           --tags project=${ENVIRONMENT_NAME}-${CIRCLE_WORKFLOW_ID:0:7}-project \
+      #           --stack-name "${ENVIRONMENT_NAME}-${CIRCLE_WORKFLOW_ID:0:7}-eks-cluster" \
+      #           --region ${AWS_DEFAULT_REGION} \
+      #           --parameter-overrides file://cloudformation/cluster-parameters.json \
+      #           --capabilities CAPABILITY_NAMED_IAM
+      #       no_output_timeout: 15m
+      # - run:
+      #     name: Ensure Nodegroup exists
+      #     command: |
+      #       aws cloudformation deploy \
+      #         --template-file cloudformation/nodegroup.yml \
+      #         --tags project=${ENVIRONMENT_NAME}-${CIRCLE_WORKFLOW_ID:0:7}-project \
+      #         --stack-name "${ENVIRONMENT_NAME}-${CIRCLE_WORKFLOW_ID:0:7}-eks-nodegroup" \
+      #         --region ${AWS_DEFAULT_REGION} \
+      #         --parameter-overrides file://cloudformation/nodegroup-parameters.json \
+      #         --capabilities CAPABILITY_NAMED_IAM 
       - run:
           name: Ensure management instances exists
           command: |
             aws cloudformation deploy \
               --template-file cloudformation/management.yml \
-              --tags project=${ENVIRONMENT_NAME}-project \
-              --stack-name "${ENVIRONMENT_NAME}-eks-management" \
+              --tags project=${ENVIRONMENT_NAME}-${CIRCLE_WORKFLOW_ID:0:7}-project \
+              --stack-name "${ENVIRONMENT_NAME}-${CIRCLE_WORKFLOW_ID:0:7}-eks-management" \
               --region ${AWS_DEFAULT_REGION} \
               --parameter-overrides file://cloudformation/management-parameters.json \
               --output text >> ~/checkIfDeployed.txt
@@ -106,7 +106,7 @@ jobs:
             aws ec2 describe-instances \
               --region "${AWS_DEFAULT_REGION}" \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --filters "Name=tag:Name,Values=${ENVIRONMENT_NAME}-management*" \
+              --filters "Name=tag:Name,Values=${ENVIRONMENT_NAME}-${CIRCLE_WORKFLOW_ID:0:7}-management*" \
               --output text >> ~/inventory.txt
             cat ~/inventory.txt
       - persist_to_workspace:
