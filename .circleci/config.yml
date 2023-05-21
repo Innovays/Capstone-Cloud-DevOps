@@ -93,8 +93,8 @@ jobs:
           command: |
             aws cloudformation deploy \
               --template-file cloudformation/management.yml \
-              --tags project=${ENVIRONMENT_NAME}-${CIRCLE_BUILD_NUM}-project \
-              --stack-name "${ENVIRONMENT_NAME}-${CIRCLE_BUILD_NUM}-eks-management" \
+              --tags project=${ENVIRONMENT_NAME}-10001-project \
+              --stack-name "${ENVIRONMENT_NAME}-10001-eks-management" \
               --region ${AWS_DEFAULT_REGION} \
               --parameter-overrides file://cloudformation/management-parameters.json \
               --output text >> ~/checkIfDeployed.txt
@@ -106,7 +106,7 @@ jobs:
             aws ec2 describe-instances \
               --region "${AWS_DEFAULT_REGION}" \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --filters "Name=tag:Name,Values=${ENVIRONMENT_NAME}-${CIRCLE_BUILD_NUM}-management*" \
+              --filters "Name=tag:Name,Values=${ENVIRONMENT_NAME}-10001-management*" \
               --output text >> ~/inventory.txt
             cat ~/inventory.txt
       - persist_to_workspace:
