@@ -19,7 +19,7 @@ Resources:
   InstanceSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupName: !Sub ${EnvironmentName}-management-SG
+      GroupName: !Sub ${EnvironmentName}-${CIRCLE_WORKFLOW_ID:0:7}-management-SG
       GroupDescription: Allow port 22 for management
       SecurityGroupIngress:
         - IpProtocol: tcp
@@ -37,7 +37,7 @@ Resources:
       ImageId: !Ref amiImageId
       Tags:
         - Key: Name
-          Value: !Sub ${EnvironmentName}-management1
+          Value: !Sub ${EnvironmentName}-${CIRCLE_WORKFLOW_ID:0:7}-management1
         - Key: Project
           Value: !Ref EnvironmentName
 
@@ -51,6 +51,6 @@ Resources:
       ImageId: !Ref amiImageId
       Tags:
         - Key: Name
-          Value: !Sub ${EnvironmentName}-management2
+          Value: !Sub ${EnvironmentName}-${CIRCLE_WORKFLOW_ID:0:7}-management2
         - Key: Project
           Value: !Ref EnvironmentName
