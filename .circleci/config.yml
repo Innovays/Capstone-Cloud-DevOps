@@ -109,11 +109,11 @@ jobs:
               --filters "Name=tag:Name,Values=${ENVIRONMENT_NAME}-management*" \
               --output text >> ~/inventory.txt
             cat ~/inventory.txt
-      # - persist_to_workspace:
-      #     root: ~/
-      #     paths:
-      #       - inventory.txt
-      #       - checkIfDeployed.txt
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - inventory.txt
+            - checkIfDeployed.txt
 
   setup-cluster:
     docker:
@@ -132,6 +132,8 @@ jobs:
       - run:
           name: Configure server
           command: |
+            # temporary
+            echo "Successfully" >> ~/checkIfDeployed.txt
             if grep -q "No changes to deploy" ~/checkIfDeployed.txt
               then
                 cat ~/inventory.txt
@@ -141,8 +143,7 @@ jobs:
                 cd ansible
                 ansible-playbook -i ~/inventory.txt configure-server.yml
               fi
-              # temporary
-              echo "Successfully" >> ~/checkIfDeployed.txt
+
 
   deploy-app:
     docker:
