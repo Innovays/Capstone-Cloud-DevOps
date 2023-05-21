@@ -28,8 +28,10 @@
   hosts: management
 #  user: ubuntu
   user: ec2-user
+  become: true
+  become_method: sudo
+  become_user: root  
   gather_facts: false
-  become: yes
   vars:
     AWS_ACCESS_KEY_ID: "{{ lookup('env','AWS_ACCESS_KEY_ID') }}"
     AWS_SECRET_ACCESS_KEY: "{{ lookup('env','AWS_SECRET_ACCESS_KEY') }}"
@@ -46,8 +48,10 @@
   hosts: management
 #  user: ubuntu
   user: ec2-user
+  become: true
+  become_method: sudo
+  become_user: root  
   gather_facts: false
-  become: yes
   vars:
     AWS_DEFAULT_REGION: "{{ lookup('env', 'AWS_DEFAULT_REGION') }}"
     ENVIRONMENT_NAME: "{{ lookup('env', 'ENVIRONMENT_NAME') }}"
