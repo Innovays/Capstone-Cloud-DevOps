@@ -87,7 +87,7 @@ jobs:
       #         --stack-name "${ENVIRONMENT_NAME}-eks-nodegroup" \
       #         --region ${AWS_DEFAULT_REGION} \
       #         --parameter-overrides file://cloudformation/nodegroup-parameters.json \
-      #         --capabilities CAPABILITY_NAMED_IAM
+      #         --capabilities CAPABILITY_NAMED_IAM 
       - run:
           name: Ensure management instances exists
           command: |
