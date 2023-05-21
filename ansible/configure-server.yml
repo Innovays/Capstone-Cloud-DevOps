@@ -17,7 +17,8 @@
 
 - name: "Authenticate AWS CLI with AWS"
   hosts: management
-  user: ubuntu
+#  user: ubuntu
+  user: ec2-user
   gather_facts: false
   become: yes
   vars:
@@ -34,7 +35,8 @@
 
 - name: "Fetch kubectl config"
   hosts: management
-  user: ubuntu
+#  user: ubuntu
+  user: ec2-user
   gather_facts: false
   become: yes
   vars:
