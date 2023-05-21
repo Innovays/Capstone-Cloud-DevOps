@@ -88,32 +88,32 @@ jobs:
       #         --region ${AWS_DEFAULT_REGION} \
       #         --parameter-overrides file://cloudformation/nodegroup-parameters.json \
       #         --capabilities CAPABILITY_NAMED_IAM 
-      - run:
-          name: Ensure management instances exists
-          command: |
-            aws cloudformation deploy \
-              --template-file cloudformation/management.yml \
-              --tags project=${ENVIRONMENT_NAME}-project \
-              --stack-name "${ENVIRONMENT_NAME}-eks-management" \
-              --region ${AWS_DEFAULT_REGION} \
-              --parameter-overrides file://cloudformation/management-parameters.json \
-              --output text >> ~/checkIfDeployed.txt
-            cat ~/checkIfDeployed.txt
-      - run:
-          name: Extract the IPs of the management instances for Ansible
-          command: |
-            echo [management] > ~/inventory.txt
-            aws ec2 describe-instances \
-              --region "${AWS_DEFAULT_REGION}" \
-              --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --filters "Name=tag:Name,Values=${ENVIRONMENT_NAME}-management*" \
-              --output text >> ~/inventory.txt
-            cat ~/inventory.txt
-      - persist_to_workspace:
-          root: ~/
-          paths:
-            - inventory.txt
-            - checkIfDeployed.txt
+      # - run:
+      #     name: Ensure management instances exists
+      #     command: |
+      #       aws cloudformation deploy \
+      #         --template-file cloudformation/management.yml \
+      #         --tags project=${ENVIRONMENT_NAME}-project \
+      #         --stack-name "${ENVIRONMENT_NAME}-eks-management" \
+      #         --region ${AWS_DEFAULT_REGION} \
+      #         --parameter-overrides file://cloudformation/management-parameters.json \
+      #         --output text >> ~/checkIfDeployed.txt
+      #       cat ~/checkIfDeployed.txt
+      # - run:
+      #     name: Extract the IPs of the management instances for Ansible
+      #     command: |
+      #       echo [management] > ~/inventory.txt
+      #       aws ec2 describe-instances \
+      #         --region "${AWS_DEFAULT_REGION}" \
+      #         --query 'Reservations[*].Instances[*].PublicIpAddress' \
+      #         --filters "Name=tag:Name,Values=${ENVIRONMENT_NAME}-management*" \
+      #         --output text >> ~/inventory.txt
+      #       cat ~/inventory.txt
+      # - persist_to_workspace:
+      #     root: ~/
+      #     paths:
+      #       - inventory.txt
+      #       - checkIfDeployed.txt
 
   setup-cluster:
     docker:
