@@ -1,217 +1,52 @@
 version: 2.1
 
-aws-cli: circleci/aws-cli@2.0.3
+orbs:
+  docker: circleci/docker@1.5.0
 
 jobs:
-
-  build-test:
+  init:
     docker:
       - image: python:3.7.3-stretch
     steps:
       - checkout
+      # Download and cache dependencies
       - restore_cache:
           keys:
-            - deps-v1-{{ checksum "requirements.txt" }}
-            - deps-v1-
+            - v1-dependencies-{{ checksum "hello_app/requirements.txt" }}
+            # fallback to using the latest cache if no exact match is found
+            # - v1-dependencies-
       - run:
-          name: install deps
+          name: Install dependencies
           command: |
-            python3 -m venv venv
-            . venv/bin/activate
+            python3 -m venv .devops-capstone
+            source .devops-capstone/bin/activate
             make install
-      - run:
-          name: execute lint
-          command: |
-            . venv/bin/activate
-            make lint
       - save_cache:
           paths:
-            - ./venv
-          key: deps-v1-{{ checksum "requirements.txt" }}
-
-  docker-upload:
-    docker:
-      - image: circleci/golang:1.15
-    working_directory: ~/repo
-    steps:
-      - checkout
-      - setup_remote_docker:
-          version: 19.03.13
+            - ./.devops-capstone  # TODO: Include in cache the "bin" directory
+          key: v1-dependencies-{{ checksum "hello_app/requirements.txt" }}
       - run:
-          name: Build Docker Image
+          name: Run lint
           command: |
-            docker build --tag=$DOCKER_IMAGE_NAME .
-            docker image ls
-      - run:
-          name: Push Docker to Dockerhub
-          command: |
-            echo "Docker ID and Image: $DOCKER_IMAGE_NAME"
-            docker login -u="$DOCKERHUB_USERNAME" -p="$DOCKERHUB_PASSWORD"
-            docker tag $DOCKER_IMAGE_NAME $DOCKERHUB_USERNAME/$DOCKER_IMAGE_NAME:$CIRCLE_WORKFLOW_ID
-            docker push $DOCKERHUB_USERNAME/$DOCKER_IMAGE_NAME:$CIRCLE_WORKFLOW_ID
-
-  setup-infra:
-    docker:
-      - image: amazon/aws-cli
-    steps:
-      - checkout
-      - run:
-          name: Install dependencies
-          command: yum install -y tar gzip
-      # - run:
-      #     name: Ensure EKS network exists
-      #     command: |
-      #       aws cloudformation deploy \
-      #         --template-file cloudformation/network.yml \
-      #         --tags project=${ENVIRONMENT_NAME}-project \
-      #         --stack-name "${ENVIRONMENT_NAME}-eks-network" \
-      #         --region ${AWS_DEFAULT_REGION} \
-      #         --parameter-overrides file://cloudformation/network-parameters.json
-      # - run:
-      #       name: Ensure EKS Cluster exists
-      #       command: |
-      #         aws cloudformation deploy \
-      #           --template-file cloudformation/cluster.yml \
-      #           --tags project=${ENVIRONMENT_NAME}-project \
-      #           --stack-name "${ENVIRONMENT_NAME}-eks-cluster" \
-      #           --region ${AWS_DEFAULT_REGION} \
-      #           --parameter-overrides file://cloudformation/cluster-parameters.json \
-      #           --capabilities CAPABILITY_NAMED_IAM
-      #       no_output_timeout: 15m
-      # - run:
-      #     name: Ensure Nodegroup exists
-      #     command: |
-      #       aws cloudformation deploy \
-      #         --template-file cloudformation/nodegroup.yml \
-      #         --tags project=${ENVIRONMENT_NAME}-project \
-      #         --stack-name "${ENVIRONMENT_NAME}-eks-nodegroup" \
-      #         --region ${AWS_DEFAULT_REGION} \
-      #         --parameter-overrides file://cloudformation/nodegroup-parameters.json \
-      #         --capabilities CAPABILITY_NAMED_IAM
-      - run:
-          name: Ensure management instances exists
-          command: |
-            aws cloudformation deploy \
-              --template-file cloudformation/management.yml \
-              --tags project=${ENVIRONMENT_NAME}-project \
-              --stack-name "${ENVIRONMENT_NAME}-eks-management" \
-              --region ${AWS_DEFAULT_REGION} \
-              --parameter-overrides file://cloudformation/management-parameters.json \
-              --output text >> ~/checkIfDeployed.txt
-            cat ~/checkIfDeployed.txt
-      - run:
-          name: Extract the IPs of the management instances for Ansible
-          command: |
-            echo [management] > ~/inventory.txt
-            aws ec2 describe-instances \
-              --region "${AWS_DEFAULT_REGION}" \
-              --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --filters "Name=tag:Name,Values=${ENVIRONMENT_NAME}-management*" \
-              --output text >> ~/inventory.txt
-            cat ~/inventory.txt
-      - persist_to_workspace:
-          root: ~/
-          paths:
-            - inventory.txt
-            - checkIfDeployed.txt
-
-  setup-cluster:
-    docker:
-      - image: python:3.7-alpine3.11
-    steps:
-      - checkout
-      - add_ssh_keys:
-          fingerprints:
-            - ${SSH_FINGERPRINT}
-      - attach_workspace:
-          at: ~/
-      - run:
-          name: Install dependencies
-          command: |
-            apk add --update ansible
-      - run:
-          name: Configure server
-          command: |
-            if grep -q "No changes to deploy" ~/checkIfDeployed.txt
-              then
-                cat ~/inventory.txt
-                echo "Our management instances are already configured."
-              else
-                cat ~/inventory.txt
-                cd ansible
-                ansible-playbook -i ~/inventory.txt configure-server.yml
-              fi
-
-  deploy-app:
-    docker:
-      - image: python:3.7-alpine3.11
-    steps:
-      - checkout
-      - add_ssh_keys:
-          fingerprints:
-            - ${SSH_FINGERPRINT}
-      - attach_workspace:
-          at: ~/
-      - run:
-          name: Install dependencies
-          command: |
-            apk add --update ansible
-      - run:
-          name: Configure server
-          command: |
-            if grep -q "No changes to deploy" ~/checkIfDeployed.txt
-              then
-                cat ~/inventory.txt
-                echo "Our management instances are already configured."
-              else
-                cat ~/inventory.txt
-                cd ansible
-                ansible-playbook -i ~/inventory.txt configure-cluster.yml
-              fi
-      - run:
-          name: Wait for LoadBalancer's domain to become reachable
-          command: |
-            if grep -q "No changes to deploy" ~/checkIfDeployed.txt
-              then
-                cat ~/inventory.txt
-                echo "Our management instances are already configured."
-              else
-                cat ~/inventory.txt
-                echo "Wait 60 seconds..."
-                sleep 60
-              fi
-      - run:
-          name: Display the LoadBalancer's DNS name
-          command: |
-            cat ~/inventory.txt
-            cd ansible
-            ansible-playbook -i ~/inventory.txt save-elb-dns.yml
-            cat ~/elb_dns.txt
-      - persist_to_workspace:
-          root: ~/
-          paths:
-            - elb_dns.txt
+            source .devops-capstone/bin/activate
+            make lint 
 
 
 workflows:
   default:
     jobs:
-      - build-test
-      - docker-upload:
-          requires:
-            - build-test
-          filters:
-            branches:
-              only: [ main ]
-      - setup-infra:
-          filters:
-            branches:
-              only: [ main ]
-      - setup-cluster:
-          requires:
-            - setup-infra
-            - docker-upload
-      - deploy-app:
-          requires:
-            - setup-cluster
-            
+      - init        
+      - docker/publish:
+          matrix:
+            parameters:
+              image: [$DOCKER_LOGIN/hello-app]
+              path: [hello_app]
+              docker-context: [hello_app]
+              deploy: [true]
+              # We publish two images with different version tags: 
+              # - numbered version
+              # - "latest"
+              # tag: ['$(<hello_app/VERSION.txt)-${CIRCLE_SHA1:0:7}', 'latest']
+              tag: ['$(<hello_app/VERSION.txt)', 'latest']
+              update-description: [true]    
+          requires: [init]
