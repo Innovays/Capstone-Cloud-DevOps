@@ -23,6 +23,8 @@ install:
 	pip install -r hello_app/requirements.txt
 	echo
 	pytest --version
+	echo "Set permissions for the scripts"
+	chmod +x ./bin/install_*.sh
 	echo
 	echo "Installing: shellcheck"
 	./bin/install_shellcheck.sh
