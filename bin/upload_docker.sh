@@ -2,7 +2,7 @@
 # This file tags and uploads an image to Docker Hub
 
 # Assumes that an image is built via `run_docker.sh`
-DOCKER_HUB_ID="gampie"
+DOCKER_HUB_ID="innovays"
 DOCKER_REPOSITORY="hello-app"
 VERSION="1.000"
 
