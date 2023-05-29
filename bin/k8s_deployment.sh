@@ -3,7 +3,7 @@
 # This tags and uploads an image to Docker Hub
 
 # Set vars
-DOCKER_HUB_ID="registry.hub.docker.com/gampie"
+DOCKER_HUB_ID="registry.hub.docker.com/innovays"
 DOCKER_REPOSITORY="hello-app"
 DEPLOYMENT_NAME=${DOCKER_REPOSITORY}
 CONTAINER_PORT=80
