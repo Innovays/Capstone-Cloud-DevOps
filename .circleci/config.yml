@@ -106,6 +106,13 @@ jobs:
             kubectl get events --sort-by=.metadata.creationTimestamp
             source .devops-capstone/bin/activate
             make check-rollout-status
+      - run:
+          name:  rollback on fail
+          when: on_fail
+          command: |
+            source .devops-capstone/bin/activate
+            make revert
+
 
   # build-docker:
   #   machine: true
