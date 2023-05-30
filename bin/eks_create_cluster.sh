@@ -10,6 +10,10 @@ echo $CLUSTER_NAME
 echo
 kubectl config get-clusters | grep -q ${CLUSTER_NAME}
 echo
+echo eksctl get cluster --region=${REGION}
+echo 
+echo eksctl get cluster --region=${REGION} | grep -q ${CLUSTER_NAME}
+echo
 
 if kubectl config get-clusters | grep -q ${CLUSTER_NAME} || eksctl get cluster --region=${REGION} | grep -q ${CLUSTER_NAME}; then
     echo
