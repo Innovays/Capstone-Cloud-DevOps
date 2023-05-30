@@ -89,11 +89,11 @@ jobs:
           command: |
             source .devops-capstone/bin/activate
             make k8s-deploy
-      - run:
-          name: Forward K8s Ports
-          command: |
-            source .devops-capstone/bin/activate
-            make forward-port
+      # - run:
+      #     name: Forward K8s Ports
+      #     command: |
+      #       source .devops-capstone/bin/activate
+      #       make forward-port
       - run:
           name: Update rolling
           command: |
