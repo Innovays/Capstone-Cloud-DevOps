@@ -18,4 +18,4 @@ managedNodeGroups:
     volumeSize: 80
     ssh:
       allow: true
-      publicKeyName: udacity01
+      publicKeyName: udacity
