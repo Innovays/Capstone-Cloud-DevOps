@@ -4,7 +4,7 @@
 # Assumes that an image is built via `run_docker.sh`
 DOCKER_HUB_ID="innovays"
 DOCKER_REPOSITORY="hello-app"
-VERSION="1.000"
+VERSION="latest"
 
 # Step 1:
 # Create dockerpath
