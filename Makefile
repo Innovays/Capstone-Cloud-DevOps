@@ -63,7 +63,7 @@ start-docker: build-docker
 	./bin/start_docker.sh
 
 push-docker: build-docker
-	./bin/push_docker.sh
+	./bin/upload_docker.sh
 
 ci-validation:
 	# Required file: .circleci/config.yml
