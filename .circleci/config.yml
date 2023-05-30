@@ -44,6 +44,11 @@ jobs:
             source .devops-capstone/bin/activate
             make push-docker
       - run:
+          name: Create cluster
+          command: |
+            source .devops-capstone/bin/activate
+            make eks-create-cluster        
+      - run:
           name: Deploy K8s
           command: |
             source .devops-capstone/bin/activate
