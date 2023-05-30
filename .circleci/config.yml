@@ -43,6 +43,26 @@ jobs:
           command: |
             source .devops-capstone/bin/activate
             make push-docker
+      - run:
+          name: Deploy K8s
+          command: |
+            source .devops-capstone/bin/activate
+            make k8s-deploy
+      - run:
+          name: Forward K8s Ports
+          command: |
+            source .devops-capstone/bin/activate
+            make forward-port
+      - run:
+          name: Update rolling
+          command: |
+            source .devops-capstone/bin/activate
+            make update-rolling
+      - run:
+          name: Update rolling
+          command: |
+            source .devops-capstone/bin/activate
+            make check-rollout-status
 
   # build-docker:
   #   machine: true
