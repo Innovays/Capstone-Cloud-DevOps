@@ -95,4 +95,4 @@ check-rollout-status:
 
 reverse:
 	${KUBECTL} get deployments -o wide
-	${KUBECTL} rollout undo deployment ${DEPLOYMENT
+	${KUBECTL} rollout undo deployment ${DEPLOYMENT}
