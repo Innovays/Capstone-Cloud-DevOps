@@ -4,11 +4,12 @@ CLUSTER="hello"
 REGION="us-west-2"
 CLUSTER_NAME="${CLUSTER}.${REGION}.eksctl.io"
 
-echo kubectl config get-clusters
+kubectl config get-clusters
 echo
 echo $CLUSTER_NAME
 echo
-echo kubectl config get-clusters | grep -q ${CLUSTER_NAME}
+kubectl config get-clusters | grep -q ${CLUSTER_NAME}
+echo
 
 if kubectl config get-clusters | grep -q ${CLUSTER_NAME}; then
     echo
