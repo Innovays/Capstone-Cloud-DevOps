@@ -31,6 +31,8 @@ jobs:
           command: |
             source .devops-capstone/bin/activate
             make lint 
+      - setup_remote_docker:
+          version: 20.10.8
       - run:
           name: Run build docker
           command: |
