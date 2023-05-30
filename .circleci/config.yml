@@ -42,7 +42,7 @@ jobs:
           name: Run upload docker
           command: |
             source .devops-capstone/bin/activate
-            make upload-docker
+            make push-docker
 
   # build-docker:
   #   machine: true
