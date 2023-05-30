@@ -73,7 +73,7 @@ workflows:
       - docker/publish:
           matrix:
             parameters:
-              image: [${DOCKER_LOGIN}/hello-app]
+              image: [$DOCKER_LOGIN/hello-app]
               path: [hello_app]
               docker-context: [hello_app]
               deploy: [true]
@@ -81,6 +81,6 @@ workflows:
               # - numbered version
               # - "latest"
               # tag: ['$(<hello_app/VERSION.txt)-${CIRCLE_SHA1:0:7}', 'latest']
-              tag: ['$(<hello_app/VERSION.txt)', 'latest']
+              tag: ['$(<hello_app/VERSION.txt)', '1.000']
               update-description: [true]    
           requires: [init]
