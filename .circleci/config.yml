@@ -30,36 +30,46 @@ jobs:
           command: |
             source .devops-capstone/bin/activate
             make lint 
-
-  build-docker:
-    machine: true
-    steps:
-      - checkout
       - run:
-          name: Build Docker Image
-          command: |
-            ./bin/build_docker.sh
-
-  docker-upload:
-    docker:
-      - image: circleci/python:3.7.3-stretch
-    steps:
-      - checkout
-      - setup_remote_docker
-      - run:
-          name: Upload Docker image
+          name: Run build docker
           command: |
             source .devops-capstone/bin/activate
-            make push-docker
+            make build-docker
+      - run:
+          name: Run upload docker
+          command: |
+            source .devops-capstone/bin/activate
+            make upload-docker
+
+  # build-docker:
+  #   machine: true
+  #   steps:
+  #     - checkout
+  #     - run:
+  #         name: Build Docker Image
+  #         command: |
+  #           ./bin/build_docker.sh
+
+  # docker-upload:
+  #   docker:
+  #     - image: circleci/python:3.7.3-stretch
+  #   steps:
+  #     - checkout
+  #     - setup_remote_docker
+  #     - run:
+  #         name: Upload Docker image
+  #         command: |
+  #           source .devops-capstone/bin/activate
+  #           make push-docker
 
 workflows:
   default:
     jobs:
       - init        
-      - build-docker:
-          requires: [init]
-      - docker-upload:
-          requires: [build-docker]
+      # - build-docker:
+      #     requires: [init]
+      # - docker-upload:
+      #     requires: [build-docker]
       - docker/publish:
           matrix:
             parameters:
@@ -73,4 +83,4 @@ workflows:
               # tag: ['$(<hello_app/VERSION.txt)-${CIRCLE_SHA1:0:7}', 'latest']
               tag: ['$(<hello_app/VERSION.txt)', 'latest']
               update-description: [true]    
-          requires: [docker-upload]
+          requires: [init]
