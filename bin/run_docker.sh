@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-CONTAINER_NAME="gampie/hello-app"
-VERSION=1.000
+CONTAINER_NAME="innovays/hello-app"
+VERSION=latest
 CONTAINER_PORT=80
 HOST_PORT=80
 
