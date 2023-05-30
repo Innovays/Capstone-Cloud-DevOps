@@ -102,6 +102,8 @@ jobs:
       - run:
           name: Check rollout status
           command: |
+            kubectl describe deployment hello-app
+            kubectl get events --sort-by=.metadata.creationTimestamp
             source .devops-capstone/bin/activate
             make check-rollout-status
 
