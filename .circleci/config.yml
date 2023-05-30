@@ -124,7 +124,7 @@ jobs:
   #         name: Upload Docker image
   #         command: |
   #           source .devops-capstone/bin/activate
-  #           make push-docker
+  #           make push-docker 
 
 workflows:
   default:
