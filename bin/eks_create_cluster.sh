@@ -11,7 +11,7 @@ echo
 kubectl config get-clusters | grep -q ${CLUSTER_NAME}
 echo
 
-if kubectl config get-clusters | grep -q ${CLUSTER_NAME}; then
+if kubectl config get-clusters | grep -q ${CLUSTER_NAME} || eksctl get cluster --region=${REGION} | grep -q ${CLUSTER_NAME}; then
     echo
     echo "Cluster '${CLUSTER_NAME}' already exists!"
     echo
