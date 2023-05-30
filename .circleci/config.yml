@@ -30,16 +30,16 @@ jobs:
           command: |
             source .devops-capstone/bin/activate
             make lint 
-      # - run:
-      #     name: Run build docker
-      #     command: |
-      #       source .devops-capstone/bin/activate
-      #       make build-docker
-      # - run:
-      #     name: Run upload docker
-      #     command: |
-      #       source .devops-capstone/bin/activate
-      #       make upload-docker
+      - run:
+          name: Run build docker
+          command: |
+            source .devops-capstone/bin/activate
+            make build-docker
+      - run:
+          name: Run upload docker
+          command: |
+            source .devops-capstone/bin/activate
+            make upload-docker
 
   # build-docker:
   #   machine: true
@@ -70,17 +70,17 @@ workflows:
       #     requires: [init]
       # - docker-upload:
       #     requires: [build-docker]
-      - docker/publish:
-          matrix:
-            parameters:
-              image: [innovays/hello-app]
-              path: [hello_app]
-              docker-context: [hello_app]
-              deploy: [true]
-              # We publish two images with different version tags: 
-              # - numbered version
-              # - "latest"
-              # tag: ['$(<hello_app/VERSION.txt)-${CIRCLE_SHA1:0:7}', 'latest']
-              tag: ['$(<hello_app/VERSION.txt)', '1.000']
-              update-description: [true]    
-          requires: [init]
+      # - docker/publish:
+      #     matrix:
+      #       parameters:
+      #         image: [innovays/hello-app]
+      #         path: [hello_app]
+      #         docker-context: [hello_app]
+      #         deploy: [true]
+      #         # We publish two images with different version tags: 
+      #         # - numbered version
+      #         # - "latest"
+      #         # tag: ['$(<hello_app/VERSION.txt)-${CIRCLE_SHA1:0:7}', 'latest']
+      #         tag: ['$(<hello_app/VERSION.txt)', '1.000']
+      #         update-description: [true]    
+      #     requires: [init]
