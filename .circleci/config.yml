@@ -6,7 +6,7 @@ orbs:
 jobs:
   init:
     docker:
-      - image: cimg/python #python:3.7.3-stretch
+      - image: cimg/python:3.7.3-stretch #python:3.7.3-stretch
     steps:
       - checkout
       # Download and cache dependencies
