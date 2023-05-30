@@ -21,6 +21,7 @@ if kubectl config get-clusters | grep -q ${CLUSTER_NAME} || $EKSCLT_CLUSTER; the
         echo
         echo "Update kubeconfig..."
         aws eks --region ${REGION} update-kubeconfig --name hello
+        kubectl config view
     fi
 else
     echo
