@@ -21,7 +21,7 @@ install:
 	echo "Installing: dependencies..."
 	pip install --upgrade pip &&\
 	pip install -r hello_app/requirements.txt &&\
-	pip install docker
+	pip install docker.io
 	echo
 	pytest --version
 	echo "Set permissions for the scripts"
