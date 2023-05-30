@@ -13,14 +13,14 @@ echo "Checking for $CLUSTER_NAME..."
 
 EKSCLT_CLUSTER=$(eksctl get cluster --region=${REGION} | grep ${CLUSTER_NAME})
 
-if kubectl config get-clusters | grep -q ${CLUSTER_NAME} || [ -n "$EKSCLT_CLUSTER" ]; then
+if kubectl config get-clusters | grep -q ${CLUSTER_NAME} || $EKSCLT_CLUSTER; then
     echo
     echo "Cluster '${CLUSTER_NAME}' already exists!"
     echo
-    if [ -n "$EKSCLT_CLUSTER" ]; then
-    echo
-    echo "Update kubeconfig..."
-    aws eks --region ${REGION} update-kubeconfig --name hello
+    if $EKSCLT_CLUSTER; then
+        echo
+        echo "Update kubeconfig..."
+        aws eks --region ${REGION} update-kubeconfig --name hello
     fi
 else
     echo
