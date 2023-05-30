@@ -30,16 +30,16 @@ jobs:
           command: |
             source .devops-capstone/bin/activate
             make lint 
-      - run:
-          name: Run build docker
-          command: |
-            source .devops-capstone/bin/activate
-            make build-docker
-      - run:
-          name: Run upload docker
-          command: |
-            source .devops-capstone/bin/activate
-            make upload-docker
+      # - run:
+      #     name: Run build docker
+      #     command: |
+      #       source .devops-capstone/bin/activate
+      #       make build-docker
+      # - run:
+      #     name: Run upload docker
+      #     command: |
+      #       source .devops-capstone/bin/activate
+      #       make upload-docker
 
   # build-docker:
   #   machine: true
