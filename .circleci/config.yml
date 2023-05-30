@@ -6,7 +6,7 @@ orbs:
 jobs:
   init:
     docker:
-      - image: cimg/python:3.11.2-stretch #python:3.7.3-stretch
+      - image: cimg/python:3.11.2 #python:3.7.3-stretch
     steps:
       - checkout
       # Download and cache dependencies
@@ -18,7 +18,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            apt-get update && apt-get install -y docker.io python3 python3-venv make
+            sudo apt-get update && sudo apt-get install -y docker.io python3 python3-venv make
             python3 -m venv .devops-capstone
             source .devops-capstone/bin/activate
             make install
