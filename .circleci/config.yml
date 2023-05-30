@@ -44,6 +44,8 @@ workflows:
   default:
     jobs:
       - init        
+      - build-docker:
+          requires: [init]
       - docker/publish:
           matrix:
             parameters:
