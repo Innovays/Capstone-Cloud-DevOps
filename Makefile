@@ -67,6 +67,9 @@ push-docker: build-docker
 ci-validation:
 	# Required file: .circleci/config.yml
 	circleci config validate
+	
+eks-create-cluster: 
+	./bin/eks_create_cluster.sh
 
 k8s-deploy: eks-create-cluster
 	# If using minikube, first execute: minikube start
