@@ -100,7 +100,7 @@ jobs:
             source .devops-capstone/bin/activate
             make update-rolling
       - run:
-          name: Update rolling
+          name: Check rollout status
           command: |
             source .devops-capstone/bin/activate
             make check-rollout-status
