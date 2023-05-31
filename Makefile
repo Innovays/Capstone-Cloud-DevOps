@@ -5,7 +5,7 @@
 CLUSTER_ID=hello
 REGION_ID=us-west-2
 KEY_PAIR_ID=key-pair-us-west-2
-DEPLOYMENT_ID=hello-app
+DEPLOYMENT_ID=hello-app-modified
 NEW_DOCKER_IMAGE=registry.hub.docker.com/innovays/hello-app:latest
 CONTAINER_GATE=80
 HOST_GATE=8080
@@ -81,7 +81,6 @@ forward-port:
 
 update-rolling:
 	${KUBECTL} get deployments -o wide
-	${KUBECTL} patch deployment ${DEPLOYMENT_ID} -p '{"spec": {"template": {"spec": {"containers": [{"name": "my-container", "imagePullPolicy": "Always"}]}}}}'
 	${KUBECTL} set image deployments/${DEPLOYMENT_ID} \
 		${DEPLOYMENT_ID}=${NEW_DOCKER_IMAGE}
 	echo
