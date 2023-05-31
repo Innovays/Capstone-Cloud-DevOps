@@ -83,7 +83,8 @@ update-rolling:
 	${KUBECTL} get deployments -o wide
 	${KUBECTL} set image deployments/${DEPLOYMENT_ID} \
 		${DEPLOYMENT_ID}=${NEW_DOCKER_IMAGE}
-	${KUBECTL} patch deployment hello-app -p '{"spec": {"template": {"spec": {"containers": [{"name": "hello-app", "imagePullPolicy": "Always"}]}}}}'
+	${KUBECTL} patch deployment ${DEPLOYMENT_ID} -p '{"spec": {"template": {"spec": {"containers": [{"name": "${DEPLOYMENT_ID}", "imagePullPolicy": "Always"}]}}}}'
+	kubectl rollout restart deployment ${DEPLOYMENT_ID}
 	echo
 	${KUBECTL} get deployments -o wide
 	${KUBECTL} describe pods | grep -i image
