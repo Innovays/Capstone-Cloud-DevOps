@@ -81,9 +81,9 @@ forward-port:
 
 update-rolling:
 	${KUBECTL} get deployments -o wide
+	${KUBECTL} patch deployment ${DEPLOYMENT_ID} -p '{"spec": {"template": {"spec": {"containers": [{"name": "my-container", "imagePullPolicy": "Always"}]}}}}'
 	${KUBECTL} set image deployments/${DEPLOYMENT_ID} \
 		${DEPLOYMENT_ID}=${NEW_DOCKER_IMAGE}
-	${KUBECTL} patch deployment ${DEPLOYMENT_ID} -p '{"spec": {"template": {"spec": {"containers": [{"name": "my-container", "imagePullPolicy": "Always"}]}}}}'
 	echo
 	${KUBECTL} get deployments -o wide
 	${KUBECTL} describe pods | grep -i image
