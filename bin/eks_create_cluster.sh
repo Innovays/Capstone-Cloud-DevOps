@@ -12,7 +12,10 @@ echo "$CLUSTERS"
 echo "Checking for $CLUSTER_NAME..."
 
 EKSCLT_CLUSTER=$(eksctl get cluster --region=${REGION} | grep ${CLUSTER_NAME})
-echo "$EKSCLT_CLUSTER"
+# Error for Linting test
+echo $EKSCLT_CLUSTER 
+#echo "$EKSCLT_CLUSTER"
+
 
 if kubectl config get-clusters | grep -q ${CLUSTER_NAME} ||  [ "$EKSCLT_CLUSTER" == "True" ] ; then
     echo
